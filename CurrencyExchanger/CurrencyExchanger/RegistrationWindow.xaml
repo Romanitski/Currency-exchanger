@@ -1,0 +1,81 @@
+﻿<Window x:Class="CurrencyExchanger.RegistrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CurrencyExchanger"
+        mc:Ignorable="d"
+        Title="Registration Window"
+        Height="530" Width="450"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ThreeDBorderWindow"
+        FontFamily="Times New Roman" FontSize="22">
+
+    <Window.Resources>
+        <Style TargetType="Label" x:Key="_baseLabelR">
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style TargetType="{x:Type Button}" x:Key="_baseButtonR">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#cccccc"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF181599" Offset="0"/>
+                <GradientStop Color="#FFFA0101" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Label Content="Name:" Margin="68,38,0,0" Style="{DynamicResource _baseLabelR}" Width="80" Grid.Row="1"/>
+        <Label Content="Password:" Margin="37,88,0,0" Style="{DynamicResource _baseLabelR}" Width="111" Grid.Row="1"/>
+        <Label Content="Type:" Margin="78,138,0,0" Style="{DynamicResource _baseLabelR}" Width="70" Grid.Row="1"/>
+
+        <TextBox x:Name="operatorName" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Margin="0,38,96.2,317" Grid.Row="1" MaxLength="16"/>
+        <PasswordBox x:Name="operatorPassword" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Margin="0,88,96.2,267" Grid.Row="1" MaxLength="13"/>
+
+        <ComboBox Name="operatorType" Grid.Column="1" IsReadOnly="True" Margin="0,138,96.2,217" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <TextBlock x:Name="firstBlock" HorizontalAlignment="Center" VerticalAlignment="Center">Administrator</TextBlock>
+            <TextBlock x:Name="secondИlock" HorizontalAlignment="Center" VerticalAlignment="Center">Course Operator</TextBlock>
+            <TextBlock x:Name="thirdBlock" HorizontalAlignment="Center" VerticalAlignment="Center">Operator-cashier</TextBlock>
+        </ComboBox>
+
+        <Button x:Name="registrationButton" Content="Registration!" Style="{DynamicResource _baseButtonR}" BorderBrush="{x:Null}" Foreground="White" Background="#FF695AC8" Cursor="Hand" Grid.Column="1" Margin="33,207,0,148" Grid.Row="1" Width="130" Height="45"/>
+
+    </Grid>
+</Window>

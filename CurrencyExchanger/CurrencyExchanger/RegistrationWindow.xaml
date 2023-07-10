@@ -69,9 +69,9 @@
         <TextBox x:Name="operatorName" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Margin="0,38,96.2,317" Grid.Row="1" MaxLength="16"/>
         <PasswordBox x:Name="operatorPassword" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Margin="0,88,96.2,267" Grid.Row="1" MaxLength="13"/>
 
-        <ComboBox Name="operatorType" Grid.Column="1" IsReadOnly="True" Margin="0,138,96.2,217" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="operatorType_SelectionChanged">
+        <ComboBox Name="operatorType" Grid.Column="1" IsReadOnly="True" Margin="0,138,96.2,217" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
             <TextBlock x:Name="firstBlock" HorizontalAlignment="Center" VerticalAlignment="Center">Administrator</TextBlock>
-            <TextBlock x:Name="secondИlock" HorizontalAlignment="Center" VerticalAlignment="Center">Course operator</TextBlock>
+            <TextBlock x:Name="secondBlock" HorizontalAlignment="Center" VerticalAlignment="Center">Course operator</TextBlock>
             <TextBlock x:Name="thirdBlock" HorizontalAlignment="Center" VerticalAlignment="Center">Operator-cashier</TextBlock>
         </ComboBox>
 

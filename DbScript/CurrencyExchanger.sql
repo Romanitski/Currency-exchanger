@@ -132,3 +132,7 @@ SELECT * FROM Currencies;
 SELECT * FROM Coefficients;
 SELECT * FROM Rate_Purchase_Sale;
 SELECT * FROM Rate_Of_Conversion;
+
+INSERT INTO Operators_Type VALUES('A', 'Administrator');
+INSERT INTO Operators_Type VALUES('B', 'Course operator');
+INSERT INTO Operators_Type VALUES('C', 'Operator-cashier');

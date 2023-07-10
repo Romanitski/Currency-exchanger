@@ -14,14 +14,21 @@ using System.Windows.Shapes;
 
 namespace CurrencyExchanger
 {
-    /// <summary>
-    /// Логика взаимодействия для RegistrationWindow.xaml
-    /// </summary>
     public partial class RegistrationWindow : Window
     {
         public RegistrationWindow()
         {
             InitializeComponent();
+        }
+
+        private void registrationButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void operatorType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

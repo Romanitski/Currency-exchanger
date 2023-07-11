@@ -48,13 +48,14 @@ namespace CurrencyExchanger
             {
                 connection.Open();
 
-
                 DataTable dataTable = new DataTable();
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 SqlCommand sqlCommand = new SqlCommand(registrationProcedure, connection);
                 sqlCommand.CommandType = CommandType.StoredProcedure;
-                sqlCommand.Parameters.Add("@UserName", SqlDbType.VarChar).Value = name;
-                sqlCommand.Parameters.Add("@Password", SqlDbType.VarChar).Value = PasswordHasher.GetHesh(password);
+
+                sqlCommand.Parameters.Add("@Operator_Name", SqlDbType.VarChar).Value = name;
+                sqlCommand.Parameters.Add("@Operator_Password", SqlDbType.VarChar).Value = PasswordHasher.GetHesh(password);
+                sqlCommand.Parameters.Add("@Operator_Type", SqlDbType.VarChar).Value = operatorPosition;
 
                 try
                 {
@@ -75,6 +76,8 @@ namespace CurrencyExchanger
                 {
                     MessageBox.Show("Such a name already exists!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
+                connection.Close();
             }
         }
     }

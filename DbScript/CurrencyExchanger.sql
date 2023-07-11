@@ -146,3 +146,9 @@ begin
 INSERT INTO Operators VALUES (@Operator_Name,@Operator_Password,@Operator_Type);
 end
 GO
+
+SELECT Operator_Name, Operator_Password, Operators_Type.Position FROM Operators join Operators_Type ON Operators.Operator_Type = Operators_Type.Operator_Type;
+GO
+
+INSERT INTO Operators VALUES('Name','Password','A');
+GO

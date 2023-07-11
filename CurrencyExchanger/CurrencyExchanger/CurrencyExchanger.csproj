@@ -95,8 +95,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Authorization.cs" />
     <Compile Include="Classes\Connection.cs" />
     <Compile Include="Classes\PasswordHasher.cs" />
+    <Compile Include="Classes\Registration.cs" />
     <Compile Include="RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>

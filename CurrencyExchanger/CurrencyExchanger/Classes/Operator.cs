@@ -20,5 +20,6 @@ namespace CurrencyExchanger.Classes
         public int operatorId { get; set; }
         public string operatorName { get; set; }
         public string operatorPassword { get; set; }
+        public string operatorType { get; set; }
     }
 }

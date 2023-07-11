@@ -136,3 +136,13 @@ SELECT * FROM Rate_Of_Conversion;
 INSERT INTO Operators_Type VALUES('A', 'Administrator');
 INSERT INTO Operators_Type VALUES('B', 'Course operator');
 INSERT INTO Operators_Type VALUES('C', 'Operator-cashier');
+
+CREATE PROCEDURE RegistrationProcedure
+@Operator_Name NVARCHAR(16),
+@Operator_Password NVARCHAR(128),
+@Operator_Type NVARCHAR(1)
+as
+begin
+INSERT INTO Operators VALUES (@Operator_Name,@Operator_Password,@Operator_Type);
+end
+GO

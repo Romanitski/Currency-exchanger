@@ -14,14 +14,14 @@ namespace CurrencyExchanger
             InitializeComponent();
         }
 
-        private bool OperatorExists(SqlConnection connection, string userName)
+        private bool OperatorExists(SqlConnection connection, string operatorName)
         {
             string checkOperatorQuery = "SELECT * FROM Operators WHERE Operator_Name = @OperatorName";
             SqlCommand command = new SqlCommand(checkOperatorQuery, connection);
             SqlParameter operatorNameParameter = new SqlParameter
             {
-                ParameterName = "@UserName",
-                Value = userName
+                ParameterName = "@OperatorName",
+                Value = operatorName
             };
             command.Parameters.Add(operatorNameParameter);
             var currentOperator = command.ExecuteReader();
@@ -58,14 +58,22 @@ namespace CurrencyExchanger
 
                 try
                 {
-                    if(name.Trim().Equals("") || password.Trim().Equals("") || operatorType.Text.Equals(""))
-                    {
-
+                    if(name.Trim().Equals("") || password.Trim().Equals("") || operatorType.Text.Equals("")) {
+                        MessageBox.Show("Missing data!", "Not enough data!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
                     }
+
+                    if (OperatorExists(connection, name)) throw new Exception();
+
+                    sqlDataAdapter.SelectCommand = sqlCommand;
+                    sqlDataAdapter.Fill(dataTable);
+
+                    MessageBox.Show("Registration is successful!", "Registration", MessageBoxButton.OK, MessageBoxImage.Information);
+                    this.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Такое имя уже существует!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Such a name already exists!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

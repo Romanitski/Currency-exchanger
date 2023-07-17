@@ -15,10 +15,13 @@ CREATE TABLE Operators (
 	Operator_Name NVARCHAR(16) NOT NULL,
 	Operator_Password NVARCHAR(128) NOT NULL,
 	Operator_Type NVARCHAR(1) NOT NULL,
-	Operator_Active DATETIME DEFAULT NULL,
+	Operator_Active BIT NOT NULL,
 	CONSTRAINT FK_Operator_Type FOREIGN KEY (Operator_Type) REFERENCES Operators_Type (Operator_Type)
 );
 GO
+
+ALTER TABLE Operators ADD CONSTRAINT DF_Active DEFAULT 0 FOR Operator_Active;
+
 --DROP TABLE IF EXISTS Operators;
 
 
@@ -81,11 +84,14 @@ CREATE TABLE Coefficients (
 	Digital_Currency_Code INT NOT NULL,
 	Operation_Type NVARCHAR(1) NOT NULL,
 	Date_Of_Issue DATETIME NOT NULL,
-	Date_Of_The_Start_Action DATETIME NOT NULL,
+	Coefficient_Active BIT NOT NULL,
 	CONSTRAINT FK_Digital_Currency_Code FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code),
 	CONSTRAINT FK_Operation_Type FOREIGN KEY (Operation_Type) REFERENCES Operations_Type (Operation_Type)
 );
 GO
+
+ALTER TABLE Coefficients ADD CONSTRAINT DF_ActiveCoefficient DEFAULT 0 FOR Coefficient_Active;
+
 --DROP TABLE IF EXISTS Coefficients;
 
 
@@ -117,7 +123,7 @@ CREATE TABLE Rate_Sale  (
 GO
 --DROP TABLE IF EXISTS Rate_Purchase;
 
-
+----- œŒÃ≈Õﬂ“‹ ÀŒ√» ” œŒÀ≈… ƒÀﬂ ƒ¬”’ ¬¿Àﬁ“
 CREATE TABLE Rate_Of_Conversion (
 	Operator_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
@@ -125,12 +131,12 @@ CREATE TABLE Rate_Of_Conversion (
 	CoefficientId INT NOT NULL,
 	Date_Of_Issue DATETIME NOT NULL,
 	Date_Of_The_Start_Action DATETIME NOT NULL,
-	CONSTRAINT FK_Digital_Currency_Code3 FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code),
-	CONSTRAINT FK_Operator_Id3 FOREIGN KEY (Operator_Id) REFERENCES Operators (Operator_Id),
+	CONSTRAINT FK_Digital_Currency_Code6 FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code),
+	CONSTRAINT FK_Operator_Id4 FOREIGN KEY (Operator_Id) REFERENCES Operators (Operator_Id),
 	CONSTRAINT FK_Coefficient3 FOREIGN KEY (CoefficientId) REFERENCES Coefficients (CoefficientId)
 );
 GO
---DROP TABLE IF EXISTS Rate_Of_Conversion;
+DROP TABLE IF EXISTS Rate_Of_Conversion;
 ---------------------------------------------------------------------------------
 
 SELECT * FROM Operators;
@@ -147,6 +153,11 @@ SELECT * FROM Rate_Of_Conversion;
 SELECT Operator_Id FROM Operators WHERE Operator_Name = 'TestB';
 SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Operation_Type = 'B';
 
+
+INSERT INTO Operators VALUES('CastomOp','test','A', '');
+DELETE FROM Operators WHERE Operator_Id = 8;
+DELETE FROM Rate_Purchase WHERE Operator_Id = 2;
+
 INSERT INTO Operators_Type VALUES('A', 'Administrator');
 INSERT INTO Operators_Type VALUES('B', 'Course operator');
 INSERT INTO Operators_Type VALUES('C', 'Operator-cashier');
@@ -162,11 +173,12 @@ INSERT INTO Currencies VALUES('643', 'RUB', '–ÓÒÒËÈÒÍËÈ Û·Î¸', '1/100');
 CREATE PROCEDURE RegistrationProcedure
 @Operator_Name NVARCHAR(16),
 @Operator_Password NVARCHAR(128),
-@Operator_Type NVARCHAR(1)
-as
-begin
-INSERT INTO Operators VALUES (@Operator_Name,@Operator_Password,@Operator_Type);
-end
+@Operator_Type NVARCHAR(1),
+@Operator_Active BIT
+AS
+BEGIN
+INSERT INTO Operators VALUES (@Operator_Name,@Operator_Password,@Operator_Type, @Operator_Active);
+END
 GO
 -----------------------------------------------------------------
 

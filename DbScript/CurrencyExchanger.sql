@@ -11,10 +11,11 @@ GO
 
 
 CREATE TABLE Operators (
-	Operator_Id INT IDENTITY(1,1) PRIMARY KEY,
+	Operator_Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Operator_Name NVARCHAR(16) NOT NULL,
 	Operator_Password NVARCHAR(128) NOT NULL,
 	Operator_Type NVARCHAR(1) NOT NULL,
+	Operator_Active DATETIME DEFAULT NULL,
 	CONSTRAINT FK_Operator_Type FOREIGN KEY (Operator_Type) REFERENCES Operators_Type (Operator_Type)
 );
 GO
@@ -30,10 +31,10 @@ GO
 
 
 CREATE TABLE Operations (
-	Operation_Id INT IDENTITY(1,1) PRIMARY KEY,
+	Operation_Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Operator_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
-	Date_Of_Issue DATETIME,
+	Date_Of_Issue DATETIME NOT NULL,
 	Transaction_Amount NVARCHAR(64) NOT NULL,
 	Transaction_Delivery NVARCHAR(64) NOT NULL,
 	Operation_Type NVARCHAR(1) NOT NULL,
@@ -57,7 +58,6 @@ CREATE TABLE Banking_Information (
 	Bank_Amount NVARCHAR(16) NOT NULL PRIMARY KEY,
 	Operation_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
-	Date_Of_Issue DATETIME,
 	CONSTRAINT FK_Operation_Id FOREIGN KEY (Operation_Id) REFERENCES Operations (Operation_Id),
 	CONSTRAINT FK_Digital_Currency_Code5 FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code)
 );
@@ -76,11 +76,12 @@ GO
 
 
 CREATE TABLE Coefficients (
-	Coefficient NVARCHAR(16) PRIMARY KEY,
+	CoefficientId INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	Coefficient NVARCHAR(16) NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
 	Operation_Type NVARCHAR(1) NOT NULL,
-	Date_Of_Issue DATETIME,
-	Date_Of_The_Start_Action DATETIME,
+	Date_Of_Issue DATETIME NOT NULL,
+	Date_Of_The_Start_Action DATETIME NOT NULL,
 	CONSTRAINT FK_Digital_Currency_Code FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code),
 	CONSTRAINT FK_Operation_Type FOREIGN KEY (Operation_Type) REFERENCES Operations_Type (Operation_Type)
 );
@@ -88,39 +89,48 @@ GO
 --DROP TABLE IF EXISTS Coefficients;
 
 
-CREATE TABLE Rate_Purchase_Sale  (
+CREATE TABLE Rate_Purchase  (
 	Operator_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
 	Rate_Purchase NVARCHAR(16) NOT NULL,
-	Rate_Sale NVARCHAR(16) NOT NULL,
-	Coefficient NVARCHAR(16),
-	Date_Of_Issue DATETIME,
-	Date_Of_The_Start_Action DATETIME,
+	CoefficientId INT NOT NULL,
+	Date_Of_Issue DATETIME NOT NULL,
+	Date_Of_The_Start_Action DATETIME NOT NULL,
 	CONSTRAINT FK_Digital_Currency_Code2 FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code),
 	CONSTRAINT FK_Operator_Id FOREIGN KEY (Operator_Id) REFERENCES Operators (Operator_Id),
-	CONSTRAINT FK_Coefficient FOREIGN KEY (Coefficient) REFERENCES Coefficients (Coefficient)
+	CONSTRAINT FK_Coefficient FOREIGN KEY (CoefficientId) REFERENCES Coefficients (CoefficientId)
 );
 GO
---DROP TABLE IF EXISTS Rate_Purchase_Sale;
+--DROP TABLE IF EXISTS Rate_Purchase;
+
+CREATE TABLE Rate_Sale  (
+	Operator_Id INT NOT NULL,
+	Digital_Currency_Code INT NOT NULL,
+	Rate_Sale NVARCHAR(16) NOT NULL,
+	CoefficientId INT NOT NULL,
+	Date_Of_Issue DATETIME NOT NULL,
+	Date_Of_The_Start_Action DATETIME NOT NULL,
+	CONSTRAINT FK_Digital_Currency_Code3 FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code),
+	CONSTRAINT FK_Operator_Id2 FOREIGN KEY (Operator_Id) REFERENCES Operators (Operator_Id),
+	CONSTRAINT FK_Coefficient2 FOREIGN KEY (CoefficientId) REFERENCES Coefficients (CoefficientId)
+);
+GO
+--DROP TABLE IF EXISTS Rate_Purchase;
 
 
 CREATE TABLE Rate_Of_Conversion (
 	Operator_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
 	Rate_Conversion NVARCHAR(16) NOT NULL,
-	Coefficient NVARCHAR(16),
-	Date_Of_Issue DATETIME,
-	Date_Of_The_Start_Action DATETIME,
+	CoefficientId INT NOT NULL,
+	Date_Of_Issue DATETIME NOT NULL,
+	Date_Of_The_Start_Action DATETIME NOT NULL,
 	CONSTRAINT FK_Digital_Currency_Code3 FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code),
-	CONSTRAINT FK_Operator_Id2 FOREIGN KEY (Operator_Id) REFERENCES Operators (Operator_Id),
-	CONSTRAINT FK_Coefficient2 FOREIGN KEY (Coefficient) REFERENCES Coefficients (Coefficient)
+	CONSTRAINT FK_Operator_Id3 FOREIGN KEY (Operator_Id) REFERENCES Operators (Operator_Id),
+	CONSTRAINT FK_Coefficient3 FOREIGN KEY (CoefficientId) REFERENCES Coefficients (CoefficientId)
 );
 GO
 --DROP TABLE IF EXISTS Rate_Of_Conversion;
-
-
-ALTER AUTHORIZATION ON DATABASE::[Obmennik3_db] TO [Valera]
-GO
 ---------------------------------------------------------------------------------
 
 SELECT * FROM Operators;
@@ -130,13 +140,25 @@ SELECT * FROM Operations_Type;
 SELECT * FROM Banking_Information;
 SELECT * FROM Currencies;
 SELECT * FROM Coefficients;
-SELECT * FROM Rate_Purchase_Sale;
+SELECT * FROM Rate_Purchase;
+SELECT * FROM Rate_Sale;
 SELECT * FROM Rate_Of_Conversion;
+
+SELECT Operator_Id FROM Operators WHERE Operator_Name = 'TestB';
+SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Operation_Type = 'B';
 
 INSERT INTO Operators_Type VALUES('A', 'Administrator');
 INSERT INTO Operators_Type VALUES('B', 'Course operator');
 INSERT INTO Operators_Type VALUES('C', 'Operator-cashier');
 
+INSERT INTO Operations_Type VALUES('A', 'Refill');
+INSERT INTO Operations_Type VALUES('B', 'Purchase');
+INSERT INTO Operations_Type VALUES('C', 'Sale');
+INSERT INTO Operations_Type VALUES('D', 'Conversion');
+
+INSERT INTO Currencies VALUES('643', 'RUB', 'Российский рубль', '1/100');
+
+-----------------------------------------------------------------
 CREATE PROCEDURE RegistrationProcedure
 @Operator_Name NVARCHAR(16),
 @Operator_Password NVARCHAR(128),
@@ -146,9 +168,7 @@ begin
 INSERT INTO Operators VALUES (@Operator_Name,@Operator_Password,@Operator_Type);
 end
 GO
+-----------------------------------------------------------------
 
 SELECT Operator_Name, Operator_Password, Operators_Type.Position FROM Operators join Operators_Type ON Operators.Operator_Type = Operators_Type.Operator_Type;
-GO
-
-INSERT INTO Operators VALUES('Name','Password','A');
 GO

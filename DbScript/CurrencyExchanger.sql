@@ -82,6 +82,7 @@ CREATE TABLE Coefficients (
 	CoefficientId INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Coefficient NVARCHAR(16) NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
+	Second_Digital_Currency_Code INT NULL,
 	Operation_Type NVARCHAR(1) NOT NULL,
 	Date_Of_Issue DATETIME NOT NULL,
 	Coefficient_Active BIT NOT NULL,
@@ -91,6 +92,9 @@ CREATE TABLE Coefficients (
 GO
 
 ALTER TABLE Coefficients ADD CONSTRAINT DF_ActiveCoefficient DEFAULT 0 FOR Coefficient_Active;
+ALTER TABLE Coefficients ADD CONSTRAINT DF_SecondCoefficientValue DEFAULT 0 FOR Second_Digital_Currency_Code;
+
+ALTER TABLE Coefficients DROP CONSTRAINT DF_SecondCoefficientValue
 
 --DROP TABLE IF EXISTS Coefficients;
 
@@ -121,12 +125,13 @@ CREATE TABLE Rate_Sale  (
 	CONSTRAINT FK_Coefficient2 FOREIGN KEY (CoefficientId) REFERENCES Coefficients (CoefficientId)
 );
 GO
---DROP TABLE IF EXISTS Rate_Purchase;
+--DROP TABLE IF EXISTS Rate_Sale;
 
 ----- œŒÃ≈Õﬂ“‹ ÀŒ√» ” œŒÀ≈… ƒÀﬂ ƒ¬”’ ¬¿Àﬁ“
 CREATE TABLE Rate_Of_Conversion (
 	Operator_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
+	Second_Digital_Currency_Code INT NOT NULL,
 	Rate_Conversion NVARCHAR(16) NOT NULL,
 	CoefficientId INT NOT NULL,
 	Date_Of_Issue DATETIME NOT NULL,
@@ -136,7 +141,7 @@ CREATE TABLE Rate_Of_Conversion (
 	CONSTRAINT FK_Coefficient3 FOREIGN KEY (CoefficientId) REFERENCES Coefficients (CoefficientId)
 );
 GO
-DROP TABLE IF EXISTS Rate_Of_Conversion;
+--DROP TABLE IF EXISTS Rate_Of_Conversion;
 ---------------------------------------------------------------------------------
 
 SELECT * FROM Operators;
@@ -152,11 +157,14 @@ SELECT * FROM Rate_Of_Conversion;
 
 SELECT Operator_Id FROM Operators WHERE Operator_Name = 'TestB';
 SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Operation_Type = 'B';
+SELECT CoefficientId FROM Coefficients WHERE Digital_Currency_Code = 643 AND Second_Digital_Currency_Code = 840 AND Operation_Type = 'D' AND Coefficient_Active = 1;
 
+INSERT INTO Operators VALUES('CastomOp','test','A', ''); 
 
-INSERT INTO Operators VALUES('CastomOp','test','A', '');
 DELETE FROM Operators WHERE Operator_Id = 8;
 DELETE FROM Rate_Purchase WHERE Operator_Id = 2;
+DELETE FROM Coefficients WHERE Coefficient = '1,031';
+DELETE FROM Rate_Of_Conversion WHERE Operator_Id = 2;
 
 INSERT INTO Operators_Type VALUES('A', 'Administrator');
 INSERT INTO Operators_Type VALUES('B', 'Course operator');

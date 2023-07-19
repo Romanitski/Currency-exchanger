@@ -58,7 +58,7 @@ GO
 
 
 CREATE TABLE Banking_Information (
-	Bank_Amount NVARCHAR(16) NOT NULL PRIMARY KEY,
+	Bank_Amount NVARCHAR(16) NOT NULL,
 	Operation_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
 	CONSTRAINT FK_Operation_Id FOREIGN KEY (Operation_Id) REFERENCES Operations (Operation_Id),
@@ -113,6 +113,7 @@ CREATE TABLE Rate_Purchase  (
 GO
 --DROP TABLE IF EXISTS Rate_Purchase;
 
+
 CREATE TABLE Rate_Sale  (
 	Operator_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
@@ -127,7 +128,7 @@ CREATE TABLE Rate_Sale  (
 GO
 --DROP TABLE IF EXISTS Rate_Sale;
 
------ ПОМЕНЯТЬ ЛОГИКУ ПОЛЕЙ ДЛЯ ДВУХ ВАЛЮТ
+
 CREATE TABLE Rate_Of_Conversion (
 	Operator_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
@@ -146,8 +147,8 @@ GO
 
 SELECT * FROM Operators;
 SELECT * FROM Operators_Type;
-SELECT * FROM Operations;
 SELECT * FROM Operations_Type;
+SELECT * FROM Operations;
 SELECT * FROM Banking_Information;
 SELECT * FROM Currencies;
 SELECT * FROM Coefficients;
@@ -155,16 +156,18 @@ SELECT * FROM Rate_Purchase;
 SELECT * FROM Rate_Sale;
 SELECT * FROM Rate_Of_Conversion;
 
-SELECT Operator_Id FROM Operators WHERE Operator_Name = 'TestB';
-SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Operation_Type = 'B';
-SELECT CoefficientId FROM Coefficients WHERE Digital_Currency_Code = 643 AND Second_Digital_Currency_Code = 840 AND Operation_Type = 'D' AND Coefficient_Active = 1;
 
-INSERT INTO Operators VALUES('CastomOp','test','A', ''); 
+SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Of_Conversion WHERE Date_Of_The_Start_Action <= (SELECT SYSDATETIME()); --проверка на дату старта действия курса
+SELECT MAX(Operation_Id) FROM Operations WHERE Operation_Type = 'A';
+SELECT MAX(Operation_Id) FROM Operations WHERE Operation_Type = @OperationType;
+SELECT MAX(Operation_Id) FROM Operations WHERE Digital_Currency_Code = 643 AND Operation_Type = 'A';
 
-DELETE FROM Operators WHERE Operator_Id = 8;
-DELETE FROM Rate_Purchase WHERE Operator_Id = 2;
-DELETE FROM Coefficients WHERE Coefficient = '1,031';
-DELETE FROM Rate_Of_Conversion WHERE Operator_Id = 2;
+--DELETE FROM Operators WHERE Operator_Id = 8;
+--DELETE FROM Operations WHERE Digital_Currency_Code = 643;
+--DELETE FROM Banking_Information WHERE Digital_Currency_Code = 643;
+--DELETE FROM Rate_Purchase WHERE Operator_Id = 2;
+--DELETE FROM Coefficients WHERE Coefficient = '1,031';
+--DELETE FROM Rate_Of_Conversion WHERE Operator_Id = 2;
 
 INSERT INTO Operators_Type VALUES('A', 'Administrator');
 INSERT INTO Operators_Type VALUES('B', 'Course operator');
@@ -174,8 +177,6 @@ INSERT INTO Operations_Type VALUES('A', 'Refill');
 INSERT INTO Operations_Type VALUES('B', 'Purchase');
 INSERT INTO Operations_Type VALUES('C', 'Sale');
 INSERT INTO Operations_Type VALUES('D', 'Conversion');
-
-INSERT INTO Currencies VALUES('643', 'RUB', 'Российский рубль', '1/100');
 
 -----------------------------------------------------------------
 CREATE PROCEDURE RegistrationProcedure

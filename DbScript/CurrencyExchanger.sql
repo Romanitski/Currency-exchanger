@@ -59,9 +59,7 @@ GO
 
 CREATE TABLE Banking_Information (
 	Bank_Amount NVARCHAR(16) NOT NULL,
-	Operation_Id INT NOT NULL,
 	Digital_Currency_Code INT NOT NULL,
-	CONSTRAINT FK_Operation_Id FOREIGN KEY (Operation_Id) REFERENCES Operations (Operation_Id),
 	CONSTRAINT FK_Digital_Currency_Code5 FOREIGN KEY (Digital_Currency_Code) REFERENCES Currencies (Digital_Currency_Code)
 );
 GO
@@ -157,14 +155,15 @@ SELECT * FROM Rate_Sale;
 SELECT * FROM Rate_Of_Conversion;
 
 
+SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Operation_Type = 'C' AND Coefficient_Active = '1';
+SELECT Rate_Purchase FROM Rate_Purchase WHERE Digital_Currency_Code = 978 AND Date_Of_The_Start_Action = (SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Purchase WHERE Date_Of_The_Start_Action <= (SELECT SYSDATETIME()));
+SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Second_Digital_Currency_Code = 840;
+SELECT Rate_Conversion FROM Rate_Of_Conversion WHERE Digital_Currency_Code = 643 AND Second_Digital_Currency_Code = 840 AND Date_Of_The_Start_Action = (SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Of_Conversion WHERE Date_Of_The_Start_Action <= (SELECT SYSDATETIME()));
 SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Of_Conversion WHERE Date_Of_The_Start_Action <= (SELECT SYSDATETIME()); --проверка на дату старта действия курса
-SELECT MAX(Operation_Id) FROM Operations WHERE Operation_Type = 'A';
-SELECT MAX(Operation_Id) FROM Operations WHERE Operation_Type = @OperationType;
-SELECT MAX(Operation_Id) FROM Operations WHERE Digital_Currency_Code = 643 AND Operation_Type = 'A';
 
 --DELETE FROM Operators WHERE Operator_Id = 8;
 --DELETE FROM Operations WHERE Digital_Currency_Code = 643;
---DELETE FROM Banking_Information WHERE Digital_Currency_Code = 643;
+--DELETE FROM Banking_Information WHERE Digital_Currency_Code = 933;
 --DELETE FROM Rate_Purchase WHERE Operator_Id = 2;
 --DELETE FROM Coefficients WHERE Coefficient = '1,031';
 --DELETE FROM Rate_Of_Conversion WHERE Operator_Id = 2;
@@ -177,6 +176,11 @@ INSERT INTO Operations_Type VALUES('A', 'Refill');
 INSERT INTO Operations_Type VALUES('B', 'Purchase');
 INSERT INTO Operations_Type VALUES('C', 'Sale');
 INSERT INTO Operations_Type VALUES('D', 'Conversion');
+
+INSERT INTO Banking_Information VALUES('10000', '643');
+INSERT INTO Banking_Information VALUES('10000', '840');
+INSERT INTO Banking_Information VALUES('10000', '978');
+INSERT INTO Banking_Information VALUES('30000', '933');
 
 -----------------------------------------------------------------
 CREATE PROCEDURE RegistrationProcedure

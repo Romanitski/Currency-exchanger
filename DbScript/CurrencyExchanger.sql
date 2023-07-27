@@ -154,12 +154,10 @@ SELECT * FROM Rate_Purchase;
 SELECT * FROM Rate_Sale;
 SELECT * FROM Rate_Of_Conversion;
 
-
-SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Operation_Type = 'C' AND Coefficient_Active = '1';
-SELECT Rate_Purchase FROM Rate_Purchase WHERE Digital_Currency_Code = 978 AND Date_Of_The_Start_Action = (SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Purchase WHERE Date_Of_The_Start_Action <= (SELECT SYSDATETIME()));
-SELECT Coefficient FROM Coefficients WHERE Digital_Currency_Code = 643 AND Second_Digital_Currency_Code = 840;
-SELECT Rate_Conversion FROM Rate_Of_Conversion WHERE Digital_Currency_Code = 643 AND Second_Digital_Currency_Code = 840 AND Date_Of_The_Start_Action = (SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Of_Conversion WHERE Date_Of_The_Start_Action <= (SELECT SYSDATETIME()));
 SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Of_Conversion WHERE Date_Of_The_Start_Action <= (SELECT SYSDATETIME()); --проверка на дату старта действия курса
+SELECT Rate_Purchase FROM Rate_Purchase WHERE Date_Of_The_Start_Action = (SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Purchase WHERE Digital_Currency_Code = 840 AND Date_Of_The_Start_Action <= (SELECT SYSDATETIME()));
+SELECT Rate_Sale FROM Rate_Sale WHERE Date_Of_The_Start_Action = (SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Sale WHERE Digital_Currency_Code = 840 AND Date_Of_The_Start_Action <= (SELECT SYSDATETIME()));
+SELECT Rate_Conversion FROM Rate_Of_Conversion WHERE Date_Of_The_Start_Action = (SELECT MAX(Date_Of_The_Start_Action) FROM Rate_Of_Conversion WHERE Digital_Currency_Code = 643 AND Second_Digital_Currency_Code = 840 AND Date_Of_The_Start_Action <= (SELECT SYSDATETIME()));
 
 --DELETE FROM Operators WHERE Operator_Id = 8;
 --DELETE FROM Operations WHERE Digital_Currency_Code = 643;
